@@ -1,6 +1,6 @@
 ---
 title: "DBスキーマはtblsのViewpointsで整理しよう"
-emoji: "🛫"
+emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["database", "documentation", "tbls"]
 published: false
@@ -10,10 +10,9 @@ published: false
 
 https://adventar.org/calendars/9595
 
-前回は竹内さんの、[「xxx」](https://example.com) でした。
+前回は竹内さんの、[Socket.ioコンテナオーケストレーションハンズオン](https://zenn.dev/rikson/articles/2023-12-04_rikson_socketio-container-orchestration) でした。
 
-
-## tblsはいいぞ
+## tblsはいいぞ🦍
 
 筆者はtblsの大ファンであり、特にViewpoints機能が他のツールとは一線を画していると思っています。今回はその良さをお伝えできればと思います。
 
