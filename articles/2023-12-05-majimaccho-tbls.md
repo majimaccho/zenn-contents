@@ -3,7 +3,7 @@ title: "DBスキーマはtblsのViewpointsで整理しよう"
 emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["database", "documentation", "tbls"]
-published: false
+published: true
 publication_name: "micin"
 publishedAt: "2023-12-05 10:00"
 ---
