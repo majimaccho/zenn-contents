@@ -13,8 +13,9 @@ publication_name: "micin"
 
 ## TL;DR
 
-1. イミュータブルデータモデルを実装するときに、Viewを使うといい
-2. tblsを使うと、Viewと参照下のテーブルの関係を可視化しやすい
+1. ViewはRDMBSのテーブルとアプリケーションのモデルの間のミスマッチを解消する
+2. ORMとも相性が良い
+3. tblsを使うと、Viewと参照下のテーブルの関係を可視化しやすい
 
 ## Viewとは何か
 
@@ -22,32 +23,125 @@ Viewは、RDMSにおける、SQLの結果をテーブルのように扱える仮
 物理的にはデータは保存されていませんが、テーブルと同じように扱えるため、同じSQLを複数箇所で使いまわすことができます。
 ORMを使っている場合も、Viewはテーブルと同じように扱えるため、複数テーブルに対するクエリを持ったViewを擬似的に一つのテーブルとして扱うことができます。
 
-## イミュータブルデータモデルとView
+## インピーダンスミスマッチとView
+### インピーダンスミスマッチとは
 
-### イミュータブルデータモデルとは何か
+インピーダンスミスマッチとは、データベースとアプリケーションのモデルの間のミスマッチのことです。
+例えば、RDBMSでは、1つのテーブルに複数のテーブルを結合した結果を格納することはできません。
+しかし、アプリケーションのモデルでは、1つのオブジェクトに複数のオブジェクトを結合した結果を格納することができます。
+このようなミスマッチがインピーダンスミスマッチです。
 
-一言で言うとUPDATE句を使わないデータモデルの考え方です。エンティティをリソースとイベントに分けて考え、更新についてはイベントを追加することで実現します。
-状態のスナップショットではなく、事実の記録をデータベースに保存することで以下のメリットがあります。
+特にイミュータブルデータモデルを採用している場合、アプリケーションのモデルで複数のイベントやリソースを一つのエンティティとして扱いたい場合があります。
+また、クラステーブル継承をしている場合もORMの支援がなければ、インピーダンスミスマッチが発生します。
 
-- 更新前の過去の状態を確認できる
-- 更新のロジックの複雑さを減らせる
-- 過去の記録が消えないため、データの信頼性を担保できる
+### Viewはインピーダンスミスマッチを解消する
 
-イミュータブルデータモデリングに関して詳しく知りたい方は、下記の記事を参考にしてください。
-[kawasima/イミュータブルデータモデル](https://scrapbox.io/kawasima/%E3%82%A4%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%96%E3%83%AB%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB)
+上述の通り、Viewは複数のテーブルに対するクエリを一つのテーブルとして扱うことができます。
+つまり、アプリケーションで必要な形にデータを変換することができるので、インピーダンスミスマッチを解消することができます。
+いくつかの例を見てみましょう。
 
-### イミュータブルデータモデルの課題とViewの活用
+#### 更新イベントとView
 
-イミュータブルデータモデルは素晴らしい考え方ですが、下記のようなことが起こります。
+イミュータブルデータモデルをしている場合、リソースエンティティと更新イベントエンティティを別々に保存することが多いです。
+最新の値は更新イベントエンティティに保存されているため、リソースエンティティを取得する際には、更新イベントエンティティを結合して最新の値を取得する必要があります。
 
-- テーブル数が多くなる
-- テーブルの構造が複雑になる
-- インピーダンスミスマッチが発生する
+仮に以下のような
 
-これらは、悪いことというよりは、複雑なデータモデルを実装するときには避けて通れない課題です。
-しかし、Viewを使うことで、これらの課題を解決することができます。
+- ユーザーテーブル(users)
+- ユーザープロフィール更新イベントテーブル(user_profile_update_events)
 
-（ここに具体例を書く）
+があるとします。
+
+```mermaid
+erDiagram
+    users ||--o{ user_profile_update_events : "" 
+    users {
+        id string
+        created_at timestamp
+
+    }
+    user_profile_update_events {
+        id string 
+        user_id string 
+        name string 
+        email string 
+        created_at timestamp
+    }
+
+```
+
+この場合、ユーザーの最新のプロフィールを取得する際には、以下のようなクエリを書く必要があります。
+
+```sql
+SELECT
+    users.id,
+    users.created_at,
+    user_profile_update_events.name,
+    user_profile_update_events.email,
+    user_profile_update_events.created_at
+FROM
+    users
+LEFT JOIN
+    user_profile_update_events
+ON
+    users.id = user_profile_update_events.user_id
+INNER JOIN (
+    SELECT 
+      user_profile_update_events.user_id, 
+      MAX(user_profile_update_events.created_at) AS max_created_at
+    FROM user_profile_update_events
+    GROUP BY user_profile_update_events.user_id
+) AS latest_events ON user_profile_update_events.user_id = latest_events.user_id
+AND user_profile_update_events.created_at = latest_events.max_created_at
+
+```
+
+このクエリは、ユーザーの最新のプロフィールを取得するクエリですが、複雑なクエリになっています。
+このクエリをViewにしてしまえば、アプリケーションからはViewをテーブルとして扱うことができるため、Viewを使って簡単に最新のプロフィールを取得することができます。
+
+また、後からパフォーマンスが問題になった場合、最新のプロフィール情報をusersテーブルにカラムとして追加するという判断をした場合も、データを更新する部分のロジックと、Viewを変更するだけで対応することができます。
+
+#### クラステーブル継承とView
+
+クラステーブル継承とは、親テーブルと子テーブルを作成し、親テーブルには共通のカラムを、子テーブルには親テーブルのカラムに加えて子テーブル固有のカラムを持たせるテーブル設計のことです。
+
+例えば、以下のようなテーブルがあるとします。
+
+- ユーザーテーブル(users)
+- 一般会員テーブル(general_members)
+- 有料会員テーブル(paid_members)
+- 退会会員テーブル(withdrawn_members)
+
+```mermaid
+erDiagram
+    users ||--o{ general_members : ""
+    users ||--o{ paid_members : "" 
+    users ||--o{ withdrawn_members : "" 
+    users {
+        id string
+        created_at timestamp
+
+    }
+    general_members {
+        id string 
+        user_id string 
+        created_at timestamp
+    }
+    paid_members {
+        id string 
+        user_id string 
+        created_at timestamp
+    }
+    withdrawn_members {
+        id string 
+        user_id string 
+        withdrawn_at timestamp
+        
+    }
+
+```
+
+
 
 ## tblsとView
 
