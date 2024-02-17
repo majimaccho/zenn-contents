@@ -25,7 +25,7 @@ YAPC::Hiroshima 2024最高だったので感想を書きます！
 いつか店舗に行ってみたい…
 
 （写真はワインではない。。。）
-![Beer](/images/YAPC_2023_beer.JPG)
+![Beer](/images/YAPC_2023_beer.jpg)
 
 ### yusukebeさんのトーク
 
@@ -148,7 +148,7 @@ YAPC古参の皆さんで久しぶりのYAPCでパネルセッションをされ
 
 全体的に、YAPCというコミュニティの温かさを感じるセッションでした。
 
-![naoyaさんが俺のこみんな知ってるでしょ？って言ってるスライド](/images/YAPC_2023_panel_1.JPG)
+![naoyaさんが俺のこみんな知ってるでしょ？って言ってるスライド](/images/YAPC_2023_panel_1.jpg)
 
 
 
