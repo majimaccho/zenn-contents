@@ -1,9 +1,9 @@
 ---
 title: "YAPC Hiroshimaが最高だったまとめ"
 emoji: "🦍"
-type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
-published: false
+type: "idea" # tech: 技術記事 / idea: アイデア
+topics: ["コミュニティ", "YAPC", "TypeScript", "テスト"]
+published: true
 ---
 
 ![logo](/images/YAPC_2023_logo.png)
