@@ -4,6 +4,7 @@ emoji: "🦍"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["コミュニティ", "YAPC", "TypeScript", "テスト"]
 published: true
+publication_name: "micin"
 ---
 
 ![logo](/images/YAPC_2023_logo.png)
