@@ -1,5 +1,5 @@
 ---
-title: "TypeScriptのSymbol.DisposeとHOCで安全&イミュータブルにDBとのコネクションを使用する"
+title: "TypeScriptのSymbol.Disposeと高階関数で安全&イミュータブルにDBとのコネクションを使用する"
 emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["TypeScript"]
@@ -18,7 +18,7 @@ DBコネクションの状態管理をする際には、以下のようにコネ
 - 状態管理を行うため、安全&イミュータブルにできない
 - コネクションの接続&解放を意識する必要があるため、ドメインロジックに集中できない
 
-これらを解決するために、HOC（高階関数）とSymbol.Disposeを使って安全&イミュータブルにDBとのコネクションを使用する方法を紹介します。
+これらを解決するために、高階関数とSymbol.Disposeを使って安全&イミュータブルにDBとのコネクションを使用する方法を紹介します。
 
 実際に手続き型的に素直に書くとこうなります
 
@@ -46,17 +46,17 @@ export const users = async () => {
 
 
 このように書くとコネクションの利用後に解放する処理を忘れないように気をつけなければならず認知負荷が高まります。
-ここで、HOCを使って、接続の状態管理を隠蔽します。
+ここで、高階関数を使って、接続の状態管理を隠蔽します。
 
 ```typescript
-// HOCを使ってコネクションの接続&解放を隠蔽
+// 高階関数を使ってコネクションの接続&解放を隠蔽
 import { Pool, PoolClient } from 'pg'
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 })
 
-// HOCによる実装。接続されたClientを利用する関数を引数に取り、接続後に解放する
+// 高階関数による実装。接続されたClientを利用する関数を引数に取り、接続後に解放する
 export const usePgConnection = async <T>(callback: (client: Client) => Promise<T>):Promise<T> => {
   const pool = new Pool()
   const client = await pool.connect()
@@ -70,7 +70,7 @@ export const usePgConnection = async <T>(callback: (client: Client) => Promise<T
 ```
 
 ```typescript
-// HOCを利用したコード
+// 高階関数を利用したコード
 export const users = async () => {
   return usePgConnection(async (client) => {
     const res = queryUser(client)
@@ -135,7 +135,7 @@ export const usePgConnection = async <T>(callback: (client: Client) => Promise<T
 
 このようにすれば、`try/finally`を書かなくても、usePgConnection関数の完了時にコネクションが解放されます。
 
-HOCとSymbol.Disposeを使うことでcallback関数の終了時にコネクションを解放するようにすると、利用側でコネクションの接続&解放を意識する必要がなくなります。
-HOCで隠蔽することで安全&イミュータブルにコネクションが管理できるようになります。
+高階関数とSymbol.Disposeを使うことでcallback関数の終了時にコネクションを解放するようにすると、利用側でコネクションの接続&解放を意識する必要がなくなります。
+高階関数で隠蔽することで安全&イミュータブルにコネクションが管理できるようになります。
 今回の例では、try句内でreturnしているので、Symbol.Disposeを利用する必要は必ずしもありませんが、
 Symbol.Disposeを利用することで、try/finallyよりも安全にコネクションの解放漏れを防ぐことができます。
