@@ -14,6 +14,11 @@ publication_name: "micin"
 
 これは主催者 [@_donsan_](https://x.com/_donsan_) の知識と経験と勉強会DJ力(参加者に良い学びをさせる力)があって参加者にとって学びの大きい会になったと思います。
 
+そんな@_donsan_の振り返り記事はこちら👇
+ぜひあわせてお読みください。
+
+https://zenn.dev/micin/articles/postgresql_internals
+
 ## 書籍の概要
 
 『内部構造から学ぶPostgreSQL―設計・運用計画の鉄則』は、その名の通り、PostgreSQLの内部構造と運用について学ぶことができる書籍です。
