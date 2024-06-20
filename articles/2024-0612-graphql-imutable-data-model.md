@@ -1,5 +1,5 @@
 ---
-title: "GraphQLとRDBをつなぐもの"
+title: "GraphQLとRDBのインピーダンスミスマッチとその解消"
 emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["GraphQL", "RDB", "SQL"]
