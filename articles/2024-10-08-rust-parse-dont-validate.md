@@ -1,5 +1,5 @@
 ---
-title: "Rustのgardeトレイトを使うときはUnvalidatedを使おう"
+title: "Rustのgardeトレイトを使うときはUnvalidatedを使いたい"
 emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["rust"]
@@ -36,12 +36,13 @@ if let Err(e) = user.validate() {
 上記のように`Validate`マクロの`validate`関数を使う場合、
 検証済の型と未検証の型が一緒くたにされてしまいます。
 
-公式ドキュメントの例や筆者が観測する限りのインターネット上のコード例ではそのように実装されています。
+上記の例で言うと`if let Err(e) = user.validate() {..}`より下のブロックでは、`user`が検証済の値として利用できますが、それ以前では未検証の値になります。
 
 関数型ドメインモデリング（原題はDomain Modeling Made Functional）で提唱されているように厳格な型システムによる、堅牢なプログラミングのためには
 「不正な状態を定義不能にせよ」["make illegal states unrepresentable"](https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/)や「検証せず、パースせよ」[Parse, don’t validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)といった考え方が重要になります。
 
-そのため、理想としては明示的に未検証の値と検証済の値を分けて定義したいところです。
+つまり不正な状態があり得る型と正常な値の型を区別して利用するべきです。
+そのため、明示的に未検証の値と検証済の値を分けて定義しましょう。
 
 ## 解決方法
 
@@ -50,8 +51,8 @@ if let Err(e) = user.validate() {
 `Unvalidated<T>`エンティティの`.validate()`の戻り値は`Result<Valid<T>, Report>`であるため、`Valid<T>`という検証済の型を作ることができます
 
 RustのgardeトレイトはRustの代表的Webサーバーのトレイトであるaxumとも連携して、リクエストの値などの検証を宣言的に行うことができます。
-Webの開発ではaxumと連携して以下のように使われるのではないでしょうか。
-
+Webの開発ではaxumと連携して以下のように使われます。
+（コードの大枠は[RustによるWebアプリケーション開発 設計からリリース・運用まで](https://www.amazon.co.jp/dp/4065369576)から拝借しています。）
 
 ### 修正前
 ```rust
@@ -72,28 +73,19 @@ pub struct CreateUserRequest {
 
 // Fromトレイトで型の詰め替えを定義
 impl From<CreateUserRequest> for CreateUser {
-    fn from(value: CreateUserRequest) -> Self {
-        let CreateUserRequest {
-            name,
-            email,
-            password,
-        } = value;
-        Self {
-            name,
-            email,
-            password,
-        }
-    }
+    //...
 }
 
-/// ユーザーを追加する
+// ユーザーを追加する
 pub async fn register_user(
-    /// 他引数は省略
+    // 他引数は省略
     Json(req): Json<CreateUserRequest>,
 ) -> AppResult<Json<UserResponse>> {
     // 認証関連の処理など省略
     
-    req.validate(&())?; // ←　ここで値を検証
+    // ここで値を検証し、以降reqを検証済とみなす
+    // ただしコンパイラとしてはreqが検証済かわからない
+    req.validate(&())?;
 
     let registered_user = registry.user_repository()
         .create(req.into()) // ←　ここでモデルの型（CreateUser）にinto()で変換する
@@ -110,17 +102,19 @@ pub async fn register_user(
 ```rust
 use garde::{Validate, Unvalidated}; // <- Unvalidatedを追加
 
-///register_user以前は同じ
+// register_user以前は同じ
 
 pub async fn register_user(
-    /// 他引数は省略
-    Json(raw_req): Json<CreateUserRequest>,
+    // 他引数は省略
+    Json(raw_req): Json<CreateUserRequest>, // ← raw_reqは未検証の型
 ) -> AppResult<Json<UserResponse>> {
     // 認証関連の処理など省略
-    let valid_req = Unvalidated::new(raw_req).validate(&())?; // ←　ここで値を検証、valid_reqは検証済の値
+    
+    // 値を検証、valid_reqは検証済の値
+    let valid_req = Unvalidated::new(raw_req).validate(&())?; 
 
     let registered_user = registry.user_repository()
-        .create(valid_req.into_inner().into()) // ←　into_innerでCreateUserRequestを取り出してから変換する
+        .create(valid_req.into_inner().into())
         .await?;
     Ok(Json(registered_user.into()))
 }
@@ -128,3 +122,4 @@ pub async fn register_user(
 ```
 
 このようにすることで、`valid_req`を`req`とは分けて定義することができ、不正な状態があり得る型を未検証のまま使うこともなくなりました。
+コンパイラからも検証済の型と未検証の型を区別することができます。
