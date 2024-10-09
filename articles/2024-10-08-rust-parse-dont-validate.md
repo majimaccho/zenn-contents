@@ -38,11 +38,17 @@ if let Err(e) = user.validate() {
 
 上記の例で言うと`if let Err(e) = user.validate() {..}`より下のブロックでは、`user`が検証済の値として利用できますが、それ以前では未検証の値になります。
 
-関数型ドメインモデリング（原題はDomain Modeling Made Functional）で提唱されているように厳格な型システムによる、堅牢なプログラミングのためには
+[関数型ドメインモデリング](https://asciidwango.jp/post/754242099814268928/%E9%96%A2%E6%95%B0%E5%9E%8B%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%A2%E3%83%87%E3%83%AA%E3%83%B3%E3%82%B0)で提唱されているように厳格な型システムによる、堅牢なプログラミングのためには
 「不正な状態を定義不能にせよ」["make illegal states unrepresentable"](https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/)や「検証せず、パースせよ」[Parse, don’t validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)といった考え方が重要になります。
 
 つまり不正な状態があり得る型と正常な値の型を区別して利用するべきです。
 そのため、明示的に未検証の値と検証済の値を分けて定義しましょう。
+
+https://asciidwango.jp/post/754242099814268928/%E9%96%A2%E6%95%B0%E5%9E%8B%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%A2%E3%83%87%E3%83%AA%E3%83%B3%E3%82%B0
+
+https://fsharpforfunandprofit.com/posts/designing-with-types-making-illegal-states-unrepresentable/
+
+https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/
 
 ## 解決方法
 
