@@ -2,14 +2,13 @@
 title: "翻訳: Parse, don’t validate (バリデーションせずパースせよ) "
 emoji: "🦍"
 type: "idea" # tech: 技術記事 / idea: アイデア
-topics: ["関数型プログラミング", "Haskell"]
+topics: ["関数型プログラミング", "Haskell", "静的解析"]
 published: false
 ---
 
 :::message 
 こちらは2019年に執筆された[Parse, don’t validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)の翻訳です。
 :::
-
 
 ---
 
