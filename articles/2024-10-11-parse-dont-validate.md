@@ -1,7 +1,7 @@
 ---
 title: "翻訳: Parse, don’t validate (バリデーションせずパースせよ) "
 emoji: "🦍"
-type: "idea" # tech: 技術記事 / idea: アイデア
+type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["関数型プログラミング", "Haskell", "静的解析"]
 published: true 
 ---
