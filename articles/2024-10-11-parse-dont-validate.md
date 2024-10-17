@@ -50,7 +50,7 @@ warning: [-Wincomplete-patterns]
 
 ## 部分関数を全域関数にする (Turning partial functions total)
 
-動的型付言語のバックグランドの人にとっては、このことは面倒なことに思えるかもしれません。もしリストがあれば、リストから要素を取得するのに苦労はしないかもしれません。そして確かに、「リストの最初の要素を取得すること」はHasckellでは不可能ではありません。ただ、少しの手続きを加える必要があるのです。この`head`関数を直す方法は2つあります。ここではもっとも簡単なものから始めましょう。
+動的型付言語のバックグランドの人にとっては、このことは面倒なことに思えるかもしれません。もしリストがあれば、リストから要素を取得するのに苦労はしないかもしれません。そして確かに、「リストの最初の要素を取得すること」はHaskellでは不可能ではありません。ただ、少しの手続きを加える必要があるのです。この`head`関数を直す方法は2つあります。ここではもっとも簡単なものから始めましょう。
 
 ## 期待値を調整する (Managing expectations)
 
@@ -90,7 +90,7 @@ main = do
     Nothing -> error "should never happen; already checked configDirs is non-empty"
 ```
 
-`getConfigurationDirectories`が実行環境からファイルパスのリストを検索する時、事前にリストがからでないことをチェックします。しかし、`head`がリストの最初の要素を取得するために`main`の中で使われる時、`Maybe FilePath`という結果によって、絶対にあり得ないとわかっている`Nothing`型に対処しなければなりません。これは以下のいくつかの理由からひどく悪いことです。
+`getConfigurationDirectories`が実行環境からファイルパスのリストを検索する時、事前にリスト空でないことをチェックします。しかし、`head`がリストの最初の要素を取得するために`main`の中で使われる時、`Maybe FilePath`という結果によって、絶対にあり得ないとわかっている`Nothing`型に対処しなければなりません。これは以下のいくつかの理由からひどく悪いことです。
 
 1. 第1に、単純に面倒です。すでに空ではないとチェックしたリストのに、どうして冗長なチェックでコードを散らかさないといけないのでしょうか？
 1. 第2に、潜在的なパフォーマンスコストがあります。この典型例での冗長なチェックのコストはとるに足らないものですが、もっと複雑なシナリオでの冗長なチェックはまるでびっしりとしたループの中で起こっているかのように、増し加えられていきます。
@@ -185,7 +185,7 @@ parseNonEmpty [] = throwIO $ userError "list cannot be empty"
 柔軟な定義によってパーサーは信じられないほど強力なツールになりました。入力値のチェックをちょうどプログラムと外界の境目でチェックできるようになり、1度これを行えば全く再チェックしなくて良くなったのです！Haskellerはこの力をよく知っています。そして彼らはたくさんの種類のパーサーを日頃から使っているのです。
 
 - [aeson](https://hackage.haskell.org/package/aeson) はJSONをパースしてドメインの型として使えるようにするパーサーを提供します。
-- 似たように、 [optparse-applicative](https://hackage.haskell.org/package/optparse-applicative) はコマンドライン引数のためmpいくつかのパーサーの組み合わせを扱えるようにするライブラリです。
+- 似たように、 [optparse-applicative](https://hackage.haskell.org/package/optparse-applicative) はコマンドライン引数のためにいくつかのパーサーの組み合わせを扱えるようにするライブラリです。
 - [persistent](https://hackage.haskell.org/package/persistent) や[postgresql-simple](https://hackage.haskell.org/package/postgresql-simple) といったデータベースのライブラリは外部のデータストアが持っているデータをパースする機構を持っています。
 - [servant](https://hackage.haskell.org/package/servant)エコシステムはHaskellのデータタイプをパスコンポーネントやクエリパラメーター、HTTPヘッダーなどからパースする仕組みで作られています。
 
