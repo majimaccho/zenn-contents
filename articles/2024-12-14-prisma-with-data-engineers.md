@@ -3,7 +3,7 @@ title: "データエンジニアに嫌われないPrismaの使い方"
 emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["TypeScript", "prisma", "dataengineering"]
-published: true
+published: false
 ---
 
 みなさんこんにちは。CADDi で CADDi Quote というプロダクトの開発をしている majimaccho です。
