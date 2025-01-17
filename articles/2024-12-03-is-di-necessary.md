@@ -6,6 +6,12 @@ topics: ["books"]
 published: false
 ---
 
+## TL;DR
+
+DI（Dependency Injection：依存の注入） は言語によっては局所的かつ限定的に利用する方が良い場合があります。
+DI の仕組み自体が複雑さを内包しているのと、単純にコード量が増加するので開発生産性が低くなるためです。
+いくつかの工夫によって DI が持つメリットをそのままに、不要な複雑さを排除して、シンプルかつ堅牢なコードを実現することができます。
+
 ## なぜ依存を注入するのか
 
 [なぜ依存を注入するのか　 DI の原理・原則とパターン](https://book.mynavi.jp/ec/products/detail/id=143373)では DI を導入する目的について以下のように説明しています。
@@ -25,14 +31,14 @@ https://book.mynavi.jp/ec/products/detail/id=143373
 1. 対象の依存が開発に関わる全ての環境に用意されていない
 1. 依存の対象に非決定的な振る舞いが含まれている
 
-今日では、DI する対象の依存のうち多くは、「**DI をする対象は 1 つの対象の依存を導入してアプリケーションを適切に稼働させるには、実行環境に関する設定や調整が必要となる**」の条件を満たしたものになると思います。同書では、こうした依存を直接使うことのデメリットとして、テストができなくなってしまうと主張されています。
+一般的に、このうち DI する対象の依存のうち多くは、「**DI をする対象は 1 つの対象の依存を導入してアプリケーションを適切に稼働させるには、実行環境に関する設定や調整が必要となる**」の条件を満たしたものになると思います。同書では、こうした依存を直接使うことのデメリットとして、テストができなくなってしまうと主張されています。
 
 ## DI のデメリット
 
 DI を行うことで疎結合なソフトウェアを作ることは、メリットがある一方で、トレードオフとなるデメリットもあります。
 その一つはデータの詰め替えが多くなってしまい、コードベースの多くを詰め替えのためのコードに割かなければならなくなることです。
 
-[kawasima さんの「データ詰め替え戦略」](https://scrapbox.io/kawasima/%E3%83%87%E3%83%BC%E3%82%BF%E8%A9%B0%E3%82%81%E6%9B%BF%E3%81%88%E6%88%A6%E7%95%A5)の中で、Clean Architecture で Full Mapping している場合と Ruby on Rails の比較がされており、比較して見ると詰め替えのコード量の差がわかりやすいと思います。
+[kawasima さんの「データ詰め替え戦略」](https://scrapbox.io/kawasima/%E3%83%87%E3%83%BC%E3%82%BF%E8%A9%B0%E3%82%81%E6%9B%BF%E3%81%88%E6%88%A6%E7%95%A5)の中で、Clean Architecture で Full Mapping している場合と Ruby on Rails の比較がされており、比較して見ると詰め替えのコード量の差を想像しやすいと思います。
 
 Clean Architecture で Full Mapping している場合
 ![Clean ArchitectureでFull Mappingしている場合詰め替えが4箇所で発生する](/images/kawasima_clean_arch_full_mapping.png)
@@ -55,9 +61,8 @@ Ruby on Rails の作者は[Dependency injection is not a virtue](https://dhh.dk/
 
 ## 関数型における DI
 
-書籍 [関数型ドメインモデリング](https://tatsu-zine.com/books/domain-modeling-made-functional)と[Six approaches to dependency injection](https://fsharpforfunandprofit.com/posts/dependencies/)と言うブログの中で
-
-I/O を処理の開始と終了の両端に追いやることでドメインロジックを純粋に保つことができるという考え方が紹介されています。
+現代では関数型言語を利用していなくても、多くの設計プラクティスを関数型言語から学ぶことができます。
+書籍 [関数型ドメインモデリング](https://tatsu-zine.com/books/domain-modeling-made-functional)と[Six approaches to dependency injection](https://fsharpforfunandprofit.com/posts/dependencies/)というブログの中で I/O を処理の開始と終了の両端に追いやることでドメインロジックを純粋に保つことができるという考え方が紹介されています。
 
 ![を処理の開始と終了の両端に追いやることでドメインロジックを純粋に保つことができる](/images/pure_code_for_unit_testing.png)
 
