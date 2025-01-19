@@ -28,6 +28,7 @@ DI を利用して疎結合なソフトウェアを作ることにはメリッ�
 その一つはデータの詰め替えが多くなってしまい、コードベースの多くを詰め替えのためのコードに割かなければならなくなることです。
 
 [kawasima さんの「データ詰め替え戦略」](https://scrapbox.io/kawasima/%E3%83%87%E3%83%BC%E3%82%BF%E8%A9%B0%E3%82%81%E6%9B%BF%E3%81%88%E6%88%A6%E7%95%A5)の中で、Clean Architecture で Full Mapping している場合と Ruby on Rails の比較がされており、比較して見ると詰め替えのコード量の差がわかりやすいと思います。
+<!-- ここで、画像を↑のリンクから引用していることは明記した方がよいと思います -->
 
 Clean Architecture で Full Mapping している場合
 ![Clean ArchitectureでFull Mappingしている場合詰め替えが4箇所で発生する](/images/kawasima_clean_arch_full_mapping.png)
