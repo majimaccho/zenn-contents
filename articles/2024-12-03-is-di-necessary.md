@@ -2,8 +2,8 @@
 title: "DIすると何がいいんだっけ"
 emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["books"]
-published: false
+topics: ["di", "dependencyinjectio", "ddd", "デザインパターン"]
+published: true
 ---
 
 ## はじめに
