@@ -2,8 +2,9 @@
 title: "なぜ気軽にテーブルにカラムを足してはいけないのか"
 emoji: "🦍"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["RDB", "SQL", "DB設計", "zennfes2025free"]
-published: false
+topics: ["rdb", "sql", "db設計", "zennfes2025free"]
+published: true
+published_at: 2025-10-13 19:00
 ---
 
 ## はじめに
