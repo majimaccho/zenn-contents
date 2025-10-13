@@ -1,0 +1,9 @@
+{
+  "plugins": {
+  },
+  "filters": {},
+  "rules": {
+    "textlint-rule-no-dropping-the-ra": true,
+    "@textlint-ja/preset-ai-writing": true
+  }
+}
