@@ -28,6 +28,11 @@ Refactoring Databases: Evolutionary Database Design
  REFACTORING DATABASES
 https://www.oreilly.com/library/view/refactoring-databases-evolutionary/0321293533/
 
+カラムを気軽に増やしてしまう場合、以下の問題があることが多いです。
+
+- 正規化ができていない
+- 複数エンティティを混在させてしまう
+
 
 ### 正規化ができていない
 正規化はDB設計の基本中の基本です。達人に学ぶ（後でちゃんと書く）の第一版のほとんどは正規化について説明されていました。
@@ -59,7 +64,7 @@ https://www.oreilly.com/library/view/refactoring-databases-evolutionary/03212935
 | 6  | 3          | 03-xxxx-xxxx  |
 
 
-### 複数エンティティの混在
+### 複数エンティティを混在させてしまう
 
 カラムが増えてしまうもう一つの原因として、複数エンティティが混在してしまうことがあります。例えば最初に以下のようなテーブルがあったとします。このテーブルは注文エンティティを表現したテーブルです。
 
