@@ -6,7 +6,7 @@ topics: []
 published: false
 ---
 
-この記事は CADDi Tech/Product Advent Calendar 2025 の 6 日目の記事です。
+この記事は CADDi Tech/Product Advent Calendar 2025 の 5 日目の記事です。
 
 こんにちは、キャディで Quote の開発をしている majimaccho です。
 今回は、2025 年 11 月に開催されたアーキテクチャカンファレンス 2025 のキーノートセッションに参加した際のある一つの講演に電撃を受けたようなビビビッと来た話を共有したいと思います。
